@@ -4,6 +4,7 @@ from .evaluator import Evaluator
 from ..types.evaluation import EvaluationData, EvaluationOutput
 from .utils.prompt_templates import judge_output_template as SYSTEM_PROMPT
 from strands import Agent
+from .utils.case_prompt_template import compose_test_prompt
 
 InputT = TypeVar("InputT")
 OutputT = TypeVar("OutputT")
@@ -34,20 +35,12 @@ class OutputEvaluator(Evaluator[InputT, OutputT]):
 
         Args:
             evaluation_case: The test case with all of the neccessary context to be evaluated.
+
+        Returns:
+            The results of the evaluation as EvaluationOutput.
         """
         evaluator_agent = Agent(model=self.model, system_prompt=self.system_prompt, callback_handler=None)
-        evaluation_prompt = "Evaluate this singular test case. THE FINAL SCORE MUST BE A DECIMAL BETWEEN 0.0 AND 1.0 (NOT 0 to 10 OR 0 to 100). \n"
-        if self.include_inputs:   
-            evaluation_prompt += f"<Input>{evaluation_case.input}</Input>\n"
-
-        if not evaluation_case.actual_output:
-            raise Exception("Please make sure the task function return the output or a dictionary with the key 'output'.")
-        
-        evaluation_prompt += f"<Output>{evaluation_case.actual_output}</Output>\n"
-        if evaluation_case.expected_output:
-            evaluation_prompt += f"<ExpectedOutput>{evaluation_case.expected_output}</ExpectedOutput>\n"
-        evaluation_prompt += f"<Rubric>{self.rubric}</Rubric>"
-
+        evaluation_prompt = compose_test_prompt(evaluation_case=evaluation_case, rubric=self.rubric, include_inputs=self.include_inputs)
         result = evaluator_agent.structured_output(EvaluationOutput, evaluation_prompt)
         return result
     
@@ -57,20 +50,12 @@ class OutputEvaluator(Evaluator[InputT, OutputT]):
 
         Args:
             evaluation_case: The test case with all of the neccessary context to be evaluated.
+            
+        Returns:
+            The results of the evaluation as EvaluationOutput.
         """
         evaluator_agent = Agent(model=self.model, system_prompt=self.system_prompt, callback_handler=None)
-        evaluation_prompt = "Evaluate this singular test case. THE FINAL SCORE MUST BE A DECIMAL BETWEEN 0.0 AND 1.0 (NOT 0 to 10 OR 0 to 100). \n"
-        if self.include_inputs:   
-            evaluation_prompt += f"<Input>{evaluation_case.input}</Input>\n"
-
-        if not evaluation_case.actual_output:
-            raise Exception("Please make sure the task function return the output or a dictionary with the key 'output'.")
-        
-        evaluation_prompt += f"<Output>{evaluation_case.actual_output}</Output>\n"
-        if evaluation_case.expected_output:
-            evaluation_prompt += f"<ExpectedOutput>{evaluation_case.expected_output}</ExpectedOutput>\n"
-        evaluation_prompt += f"<Rubric>{self.rubric}</Rubric>"
-
+        evaluation_prompt = compose_test_prompt(evaluation_case=evaluation_case, rubric=self.rubric, include_inputs=self.include_inputs)
         result = await evaluator_agent.structured_output_async(EvaluationOutput, evaluation_prompt)
         return result
         
