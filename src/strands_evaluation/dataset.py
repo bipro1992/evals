@@ -116,13 +116,11 @@ class Dataset(BaseModel, Generic[InputT, OutputT]):
         """
         while True:
             try:
-                # Get case from queue with timeout
-                case = await asyncio.wait_for(queue.get(), timeout=0.1)
-            except asyncio.TimeoutError:
-                if queue.empty():
-                    break
-                continue
-                
+                case = queue.get_nowait()
+            except asyncio.QueueEmpty:
+                break
+            
+            ## Evaluation ##
             try:
                 evaluation_context = await self._run_task_async(task, case)
                 evaluation_output = await self.evaluator.evaluate_async(evaluation_context)
@@ -135,7 +133,6 @@ class Dataset(BaseModel, Generic[InputT, OutputT]):
                     "reason": evaluation_output.reason or ""
                 })
             except Exception as e:
-                # Handle errors
                 results.append({
                     "case": case.model_dump(),
                     "test_pass": False,
