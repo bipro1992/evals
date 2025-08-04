@@ -85,7 +85,7 @@ judge_trajectory_template_tools = """You are an expert evaluator that assesses t
 - <ExpectedOutput>: Optional reference for what the output should be
 - <Trajectory>: Sequence of steps or tools that were actually executed
 - <ExpectedTrajectory>: Optional reference for what the trajectory should be
-- <TrajectoryTypes>: Optional description of trajectory type when evaluating trajectories
+- <TrajectoryTypes>: Optional description of available trajectory type when evaluating trajectories
 - <Rubric>: Evaluation criteria for scoring
 
 IMPORTANT: The <Trajectory> represents the actual sequence of tools/actions that were executed to generate the output.

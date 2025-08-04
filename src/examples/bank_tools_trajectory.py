@@ -109,10 +109,9 @@ async def async_descriptive_tools_trajectory_example():
         bank_prompt = "You are a banker, ensure that only people with sufficient balance can spend them. Collect debt from people with negative balance. Be sure to report the current balance after all of the actions."
         agent = Agent(tools = [get_balance, modify_balance, collect_debt], system_prompt=bank_prompt, callback_handler=None)
         response = await agent.invoke_async(query)
-       
+        trajectory_evaluator.update_trajectory_description(helper_funcs.extract_tools_description(agent))
         return {"output": str(response),
                 "trajectory": helper_funcs.extract_agent_tools_used_from_messages(agent.messages)}
-    
     ### Step 5: Run evaluation ###                                                                                                                                                
     report = await dataset.run_evaluations_async(get_response)
     return report
@@ -122,8 +121,7 @@ if __name__ == "__main__":
     start = datetime.datetime.now()
     report = asyncio.run(async_descriptive_tools_trajectory_example())
     end = datetime.datetime.now()
-    print("Async: ", end - start) # Async:  0:00:14.723627
-    report.display()
+    print("Async: ", end - start)
     report.to_file("async_bank_tools_trajectory_report", "json")
     report.run_display(include_actual_trajectory=True)
 

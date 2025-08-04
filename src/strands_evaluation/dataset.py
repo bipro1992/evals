@@ -3,7 +3,7 @@ from typing_extensions import TypeVar, Generic, Any
 from collections.abc import Callable
 
 from .case import Case
-from .types.evaluation import EvaluationData, EvaluationOutput
+from .types.evaluation import EvaluationData
 from .types.evaluation_report import EvaluationReport
 from .evaluators.evaluator import Evaluator
 from .evaluators.trajectory_evaluator import TrajectoryEvaluator
