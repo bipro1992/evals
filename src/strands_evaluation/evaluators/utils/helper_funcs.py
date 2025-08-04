@@ -1,9 +1,11 @@
 from strands.multiagent import SwarmResult
 from strands.multiagent import GraphResult
+from strands import Agent
 
 ### Extracting Information from SWARM ###
 def extract_swarm_handoffs(swarm_result: SwarmResult) -> list[dict]:
-    """Extract handoff information from swarm execution results.
+    """
+    Extract handoff information from swarm execution results.
     
     Args:
         swarm_result: Result object from swarm execution
@@ -34,7 +36,8 @@ def extract_swarm_handoffs(swarm_result: SwarmResult) -> list[dict]:
     return hand_off_info
 
 def extract_swarm_interactions_from_handoffs(handoffs_info: list[dict]) -> list[dict]:
-    """Convert handoff information to interaction format for evaluation.
+    """
+    Convert handoff information to interaction format for evaluation.
     
     Args:
         handoffs_info: List of handoff information from extract_swarm_handoffs
@@ -78,7 +81,8 @@ def extract_swarm_interactions(swarm_result: SwarmResult) -> list[dict]:
 
 ### Extracting Information from GRAPH ###
 def extract_graph_interactions(graph_result: GraphResult):
-    """Extract interaction information from graph execution results.
+    """
+    Extract interaction information from graph execution results.
     
     Args:
         graph_result: Result object from graph execution
@@ -101,7 +105,8 @@ def extract_graph_interactions(graph_result: GraphResult):
 
 ### Extract Information from Agent result ###
 def extract_agent_tools_used_from_messages(agent_messages):
-    """Extract tool usage information from agent message history.
+    """
+    Extract tool usage information from agent message history.
     
     Args:
         agent_messages: List of message dictionaries from agent conversation
@@ -124,7 +129,8 @@ def extract_agent_tools_used_from_messages(agent_messages):
     return tools_used
 
 def extract_agent_tools_used_from_metrics(agent_result):
-    """Extract tool usage metrics from agent execution result.
+    """
+    Extract tool usage metrics from agent execution result.
     
     Args:
         agent_result: Agent result object containing metrics
@@ -150,3 +156,25 @@ def extract_agent_tools_used_from_metrics(agent_result):
             "total_time": tool_info.total_time,
         })
     return tools_used
+
+### Extract Information from Agent ###
+def extract_tools_description(agent: Agent, is_short: bool = True):
+    """
+    Extract a dictionary of all tools used in a given agent.
+    
+    Args:
+        agent (Agent): Target agent to extract tool registry from
+        is_short (bool, optional): Whether to return only the description of the tools or everything. Defaults to True.
+        
+    Returns:
+        dict: Tool name and its corresponding description
+        {<tool_name>: <tool_description>, ...}
+    """
+    description = agent.tool_registry.get_all_tools_config()
+    if is_short:
+        shorten_descrip = {}
+        for tool_name, tool_info in description.items():
+            shorten_descrip[tool_name] = tool_info["description"]
+        return shorten_descrip
+
+    return description
