@@ -42,16 +42,16 @@ def output_judge_example():
 
     ### Step 2: Create evaluator ###
     LLM_judge = OutputEvaluator(
-        rubric="The output should represent a reasonable answer to the input. 1 if the output is concise and correct." \
+        rubric="The output should represent a reasonable answer to the input. 1 if the output is concise and correct."
         " 0 if the output is wrong and full of unnecessary text.",
         include_inputs=True,
     )
     ## or
     LLM_judge_w_prompt = OutputEvaluator(
-        rubric="The output should represent a reasonable answer to the input. 1 if the output is concise and correct." \
+        rubric="The output should represent a reasonable answer to the input. 1 if the output is concise and correct."
         " 0 if the output is wrong and full of unnecessary text.",
-        system_prompt="You are an expert AI evaluator. Your job is to assess the quality of the response" \
-        " based according to a user-specified rubric." \
+        system_prompt="You are an expert AI evaluator. Your job is to assess the quality of the response"
+        " based according to a user-specified rubric."
         " You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}",
         include_inputs=True,
     )
@@ -104,16 +104,16 @@ async def async_output_judge_example():
 
     ### Step 2: Create evaluator ###
     LLM_judge = OutputEvaluator(
-        rubric="The output should represent a reasonable answer to the input." \
+        rubric="The output should represent a reasonable answer to the input."
         " 1 if the output is concise and correct. 0 if the output is wrong and full of unnecessary text.",
         include_inputs=True,
     )
     ## or
     LLM_judge_w_prompt = OutputEvaluator(
-        rubric="The output should represent a reasonable answer to the input." \
+        rubric="The output should represent a reasonable answer to the input."
         " 1 if the output is concise and correct. 0 if the output is wrong and full of unnecessary text.",
-        system_prompt="You are an expert AI evaluator. Your job is to assess the quality of the response based" \
-        " according to a user-specified rubric." \
+        system_prompt="You are an expert AI evaluator. Your job is to assess the quality of the response based"
+        " according to a user-specified rubric."
         " You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}",
         include_inputs=True,
     )

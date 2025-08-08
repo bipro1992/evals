@@ -32,7 +32,7 @@ class TestEvaluator:
 
         with pytest.raises(
             NotImplementedError,
-            match="This method should be implemented in subclasses," \
+            match="This method should be implemented in subclasses,"
             " especially if you want to run evaluations asynchronously.",
         ):
             await evaluator.evaluate_async(evaluation_data)

@@ -179,7 +179,7 @@ class EvaluationReport(BaseModel):
         """
         return cls.model_validate(data)
 
-    def to_file(self, file_name: str, format: str, directory: str = "report_files"):
+    def to_file(self, file_name: str, format: str = "json", directory: str = "report_files"):
         """
         Write the report to a file.
 
@@ -198,7 +198,7 @@ class EvaluationReport(BaseModel):
             raise ValueError(f"Unsupported format: {format}")
 
     @classmethod
-    def from_file(cls, file_path: str, format: str):
+    def from_file(cls, file_path: str, format: str = "json"):
         """
         Create an EvaluationReport instance from a file.
 

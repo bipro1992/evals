@@ -98,8 +98,10 @@ async def async_graph_interaction_history_example():
         " and fact check and synthesize the information into a coherent report.",
     }
     # if want to use the same rubric
-    basic_rubric = "The graph system should ultilized the agents as expected with relevant information." \
-    " The actual interactions should include more information than expected."
+    basic_rubric = (
+        "The graph system should ultilized the agents as expected with relevant information."
+        " The actual interactions should include more information than expected."
+    )
     evaluator = InteractionsEvaluator(rubric=rubric)
 
     ### Step 3: Create dataset ###

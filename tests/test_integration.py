@@ -44,8 +44,8 @@ def interaction_case():
             input="hello",
             expected_output="world",
             expected_interactions=[
-                {"node_name": "agent1", "dependencies": [], "messages": "processing hello"},
-                {"node_name": "agent2", "dependencies": ["agent1"], "messages": "final result"},
+                {"node_name": "agent1", "dependencies": [], "messages": ["processing hello"]},
+                {"node_name": "agent2", "dependencies": ["agent1"], "messages": ["final result"]},
             ],
         )
     ]
@@ -280,8 +280,8 @@ class TestIntegration:
             return {
                 "output": "world",
                 "interactions": [
-                    {"node_name": "agent1", "dependencies": [], "messages": "processing hello"},
-                    {"node_name": "agent2", "dependencies": ["agent1"], "messages": "final result"},
+                    {"node_name": "agent1", "dependencies": [], "messages": ["processing hello"]},
+                    {"node_name": "agent2", "dependencies": ["agent1"], "messages": ["final result"]},
                 ],
             }
 
@@ -303,8 +303,8 @@ class TestIntegration:
             return {
                 "output": "world",
                 "interactions": [
-                    {"node_name": "agent1", "dependencies": [], "message": "processing hello"},
-                    {"node_name": "agent2", "dependencies": ["agent1"], "message": "final result"},
+                    {"node_name": "agent1", "dependencies": [], "messages": ["processing hello"]},
+                    {"node_name": "agent2", "dependencies": ["agent1"], "messages": ["final result"]},
                 ],
             }
 

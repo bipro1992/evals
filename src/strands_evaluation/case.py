@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing_extensions import Any, Generic, TypeVar
 
+from .types.evaluation import Interaction
+
 InputT = TypeVar("InputT")
 OutputT = TypeVar("OutputT")
 
@@ -43,5 +45,5 @@ class Case(BaseModel, Generic[InputT, OutputT]):
     input: InputT
     expected_output: OutputT | None = None
     expected_trajectory: list[Any] | None = None
-    expected_interactions: list[dict] | None = None
-    metadata: dict[str, Any] = {}
+    expected_interactions: list[Interaction] | None = None
+    metadata: dict[str, Any] | None = None
