@@ -7,6 +7,7 @@ from strands_evaluation.dataset import Dataset
 from strands_evaluation.evaluators.interactions_evaluator import InteractionsEvaluator
 from strands_evaluation.evaluators.trajectory_evaluator import TrajectoryEvaluator
 from strands_evaluation.evaluators.utils import helper_funcs
+from strands_evaluation.types.evaluation import Interaction
 from strands_tools import http_request, retrieve
 
 
@@ -207,7 +208,9 @@ async def async_agents_as_tools_interaction_example():
         interactions = []
         for tool_used in tools_used:
             interactions.append(
-                {"node_name": tool_used.get("name"), "dependencies": [], "messages": tool_used.get("message")}
+                Interaction(
+                    **{"node_name": tool_used.get("name"), "dependencies": [], "messages": tool_used.get("message")}
+                )
             )
 
         # This helper function does not include message
@@ -219,12 +222,12 @@ async def async_agents_as_tools_interaction_example():
 
 if __name__ == "__main__":
     # run the file as a module: eg. python -m examples.evaluate_agents_as_tools
-    # start = datetime.datetime.now()
-    # report = asyncio.run(async_evaluate_tools_as_agents_example())
-    # end = datetime.datetime.now()
-    # print("Time: ", end - start)
-    # report.to_file("async_tools_as_agents_report_w_output", "json")
-    # report.run_display(include_actual_trajectory=True)
+    start = datetime.datetime.now()
+    report = asyncio.run(async_evaluate_tools_as_agents_example())
+    end = datetime.datetime.now()
+    print("Time: ", end - start)
+    report.to_file("async_tools_as_agents_report_w_output", "json")
+    report.run_display(include_actual_trajectory=True)
 
     start = datetime.datetime.now()
     report = asyncio.run(async_agents_as_tools_interaction_example())

@@ -3,7 +3,6 @@ import json
 import os
 from collections.abc import Callable
 
-from pydantic import BaseModel
 from typing_extensions import Any, Generic, TypeVar
 
 from .case import Case
@@ -18,7 +17,7 @@ InputT = TypeVar("InputT")
 OutputT = TypeVar("OutputT")
 
 
-class Dataset(BaseModel, Generic[InputT, OutputT]):
+class Dataset(Generic[InputT, OutputT]):
     """
     A collection of test cases, representing a dataset.
 
@@ -47,8 +46,52 @@ class Dataset(BaseModel, Generic[InputT, OutputT]):
         )
     """
 
-    cases: list[Case[InputT, OutputT]]
-    evaluator: Evaluator[InputT, OutputT]
+    def __init__(self, cases: list[Case[InputT, OutputT]] = None, evaluator: Evaluator[InputT, OutputT] = Evaluator()):
+        self._cases = cases if cases else []
+        self._evaluator = evaluator
+
+    @property
+    def cases(self) -> list[Case[InputT, OutputT]]:
+        """
+        Get a deep copy of all test cases in the dataset.
+
+        Returns deep copies to prevent accidental mutation of the original test cases.
+        Users can safely modify the returned cases without affecting the dataset.
+
+        Returns:
+            List of Case objects (deep copies) containing all test cases in the dataset
+        """
+        return [case.model_copy(deep=True) for case in self._cases]
+
+    @property
+    def evaluator(self) -> Evaluator[InputT, OutputT]:
+        """
+        Get the evaluator used for assessing test case performance.
+
+        Returns:
+            The evaluator instance configured for this dataset
+        """
+        return self._evaluator
+
+    @cases.setter
+    def cases(self, new_cases: list[Case[InputT, OutputT]]):
+        """
+        Set the test cases for this dataset.
+
+        Args:
+            new_cases: List of Case objects to use as the dataset's test cases
+        """
+        self._cases = new_cases
+
+    @evaluator.setter
+    def evaluator(self, new_evaluator: Evaluator[InputT, OutputT]):
+        """
+        Set the evaluator for assessing test case performance.
+
+        Args:
+            new_evaluator: Evaluator instance to use for evaluating test cases
+        """
+        self._evaluator = new_evaluator
 
     def _run_task(
         self, task: Callable[[InputT], OutputT | dict[str, Any]], case: Case[InputT, OutputT]
@@ -175,7 +218,7 @@ class Dataset(BaseModel, Generic[InputT, OutputT]):
         test_passes = []
         cases = []
         reasons = []
-        for case in self.cases:
+        for case in self._cases:
             try:
                 evaluation_context = self._run_task(task, case)
                 evaluation_output = self.evaluator.evaluate(evaluation_context)
@@ -217,10 +260,10 @@ class Dataset(BaseModel, Generic[InputT, OutputT]):
         queue = asyncio.Queue()
         results = []
 
-        for case in self.cases:
+        for case in self._cases:
             queue.put_nowait(case)
 
-        num_workers = min(max_workers, len(self.cases))
+        num_workers = min(max_workers, len(self._cases))
 
         # Create and start workers
         workers = [asyncio.create_task(self._worker(queue, task, results)) for _ in range(num_workers)]
@@ -252,9 +295,9 @@ class Dataset(BaseModel, Generic[InputT, OutputT]):
         Return:
             A dictionary representation of the dataset.
         """
-        return {"cases": [case.model_dump() for case in self.cases], "evaluator": self.evaluator.to_dict()}
+        return {"cases": [case.model_dump() for case in self._cases], "evaluator": self.evaluator.to_dict()}
 
-    def to_file(self, file_name: str, format: str, directory: str = "dataset_files"):
+    def to_file(self, file_name: str, format: str = "json", directory: str = "dataset_files"):
         """
         Write the dataset to a file.
 
@@ -304,7 +347,7 @@ class Dataset(BaseModel, Generic[InputT, OutputT]):
         return cls(cases=cases, evaluator=evaluator)
 
     @classmethod
-    def from_file(cls, file_path: str, format: str, custom_evaluators: list[Evaluator] = []):
+    def from_file(cls, file_path: str, format: str = "json", custom_evaluators: list[Evaluator] = []):
         """
         Create a dataset from a file.
 

@@ -12,7 +12,7 @@ class TestCase:
         assert case.expected_output is None
         assert case.expected_trajectory is None
         assert case.expected_interactions is None
-        assert case.metadata == {}
+        assert case.metadata is None
 
     def test_create_full_case(self):
         """Test creating a Case with all fields"""
@@ -21,7 +21,7 @@ class TestCase:
             input="What is 2+2?",
             expected_output="4",
             expected_trajectory=["calculator"],
-            expected_interactions=[{"node_name": "math_agent", "message": "2x2 is 4.", "dependencies": []}],
+            expected_interactions=[{"node_name": "math_agent", "messages": ["2x2 is 4."], "dependencies": []}],
             metadata={"category": "math", "difficulty": "easy"},
         )
 
@@ -29,7 +29,9 @@ class TestCase:
         assert case.input == "What is 2+2?"
         assert case.expected_output == "4"
         assert case.expected_trajectory == ["calculator"]
-        assert case.expected_interactions == [{"node_name": "math_agent", "message": "2x2 is 4.", "dependencies": []}]
+        assert case.expected_interactions == [
+            {"node_name": "math_agent", "messages": ["2x2 is 4."], "dependencies": []}
+        ]
         assert case.metadata == {"category": "math", "difficulty": "easy"}
 
     def test_case_with_different_types(self):
@@ -42,8 +44,8 @@ class TestCase:
     def test_case_with_interactions(self):
         """Test Case with expected_interactions"""
         interactions = [
-            {"agent": "planner", "message": "plan", "dependencies": []},
-            {"agent": "executor", "message": "execute", "dependencies": []},
+            {"node_name": "planner", "messages": ["plan"], "dependencies": []},
+            {"node_name": "executor", "messages": ["execute"]},
         ]
         case = Case[str, str](input="Complex task", expected_interactions=interactions)
 

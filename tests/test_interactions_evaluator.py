@@ -36,12 +36,12 @@ def evaluation_data():
         actual_output="Climate change affects agriculture through drought, temperature, and pests.",
         expected_output="Climate change impacts agriculture via multiple factors.",
         actual_interactions=[
-            {"node_name": "planner", "dependencies": [], "messages": "Breaking down the analysis task"},
-            {"node_name": "researcher", "dependencies": ["planner"], "messages": "Found key climate impacts"},
+            {"node_name": "planner", "dependencies": [], "messages": ["Breaking down the analysis task"]},
+            {"node_name": "researcher", "dependencies": ["planner"], "messages": ["Found key climate impacts"]},
         ],
         expected_interactions=[
-            {"node_name": "planner", "dependencies": [], "messages": "Plan the analysis approach"},
-            {"node_name": "researcher", "dependencies": ["planner"], "messages": "Research climate data"},
+            {"node_name": "planner", "dependencies": [], "messages": ["Plan the analysis approach"]},
+            {"node_name": "researcher", "dependencies": ["planner"], "messages": ["Research climate data"]},
         ],
         name="climate_analysis_test",
     )
@@ -132,12 +132,11 @@ class TestInteractionsEvaluator:
     def test_evaluate_missing_interactions(self):
         """Test evaluation raises exception when interactions are missing"""
         evaluator = InteractionsEvaluator(rubric="Test rubric")
-        evaluation_data = EvaluationData(
-            input="test",
-            actual_output="result"
-        )
-        
-        with pytest.raises(Exception, match="Please make sure the task function returns a dictionary with the key 'interactions'"):
+        evaluation_data = EvaluationData(input="test", actual_output="result")
+
+        with pytest.raises(
+            Exception, match="Please make sure the task function returns a dictionary with the key 'interactions'"
+        ):
             evaluator.evaluate(evaluation_data)
 
     @patch("src.strands_evaluation.evaluators.interactions_evaluator.Agent")
@@ -149,11 +148,12 @@ class TestInteractionsEvaluator:
             input="test",
             actual_interactions=[{"node_name": "test"}],  # Missing dependencies and message
         )
-        
+
         with pytest.raises(
             Exception,
-            match="Please make sure the task function returns a dictionary" \
-            " with the key 'interactions' that contains 'node_name', 'dependencies', and 'messages'"):
+            match="Please make sure the task function returns a dictionary"
+            " with the key 'interactions' that contains 'node_name', 'dependencies', and 'messages'",
+        ):
             evaluator.evaluate(evaluation_data)
 
     @patch("src.strands_evaluation.evaluators.interactions_evaluator.Agent")
@@ -169,8 +169,8 @@ class TestInteractionsEvaluator:
         evaluation_data = EvaluationData(
             input="Analyze climate change",
             actual_interactions=[
-                {"node_name": "planner", "dependencies": [], "messages": "Breaking down analysis"},
-                {"node_name": "researcher", "dependencies": ["planner"], "messages": "Research findings"},
+                {"node_name": "planner", "dependencies": [], "messages": ["Breaking down analysis"]},
+                {"node_name": "researcher", "dependencies": ["planner"], "messages": ["Research findings"]},
             ],
         )
 
@@ -199,7 +199,7 @@ class TestInteractionsEvaluator:
 
         evaluation_data = EvaluationData(
             input="test",
-            actual_interactions=[{"node_name": "missing_node", "dependencies": [], "messages": "test message"}],
+            actual_interactions=[{"node_name": "missing_node", "dependencies": [], "messages": ["test message"]}],
         )
 
         with pytest.raises(Exception, match="Please make sure the rubric dictionary contains the key 'missing_node'"):
@@ -215,8 +215,8 @@ class TestInteractionsEvaluator:
         evaluation_data = EvaluationData(
             input="Climate analysis",
             actual_interactions=[
-                {"node_name": "planner", "dependencies": [], "messages": "Plan analysis"},
-                {"node_name": "researcher", "dependencies": ["planner"], "messages": "Research data"},
+                {"node_name": "planner", "dependencies": [], "messages": ["Plan analysis"]},
+                {"node_name": "researcher", "dependencies": ["planner"], "messages": ["Research data"]},
             ],
         )
 

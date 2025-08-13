@@ -38,7 +38,7 @@ def compose_test_prompt(
         if evaluation_case.actual_output:
             evaluation_prompt += f"<Output>{evaluation_case.actual_output}</Output>\n"
     else:
-        if not evaluation_case.actual_output:
+        if evaluation_case.actual_output is None:
             raise Exception(
                 "Please make sure the task function return the output or a dictionary with the key 'output'."
             )
@@ -48,7 +48,7 @@ def compose_test_prompt(
         evaluation_prompt += f"<ExpectedOutput>{evaluation_case.expected_output}</ExpectedOutput>\n"
 
     if uses_trajectory:  # trajectory evaluations require actual_trajectory
-        if not evaluation_case.actual_trajectory:
+        if evaluation_case.actual_trajectory is None:
             raise Exception("Please make sure the task function return a dictionary with the key 'trajectory'.")
         evaluation_prompt += f"<Trajectory>{evaluation_case.actual_trajectory}</Trajectory>\n"
 

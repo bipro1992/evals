@@ -71,6 +71,7 @@ def extract_swarm_interactions(swarm_result: SwarmResult) -> list[dict]:
     handoff_info = extract_swarm_handoffs(swarm_result)
     return extract_swarm_interactions_from_handoffs(handoff_info)
 
+
 def extract_graph_interactions(graph_result: GraphResult):
     """
     Extract interaction information from graph execution results.
@@ -89,6 +90,7 @@ def extract_graph_interactions(graph_result: GraphResult):
         dependencies = [n.node_id for n in node.dependencies]
         message_info.append({"node_name": node_name, "dependencies": dependencies, "messages": node_messages})
     return message_info
+
 
 def extract_agent_tools_used_from_messages(agent_messages):
     """
@@ -145,6 +147,7 @@ def extract_agent_tools_used_from_metrics(agent_result):
             }
         )
     return tools_used
+
 
 def extract_tools_description(agent: Agent, is_short: bool = True):
     """

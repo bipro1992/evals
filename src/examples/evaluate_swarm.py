@@ -68,7 +68,7 @@ async def async_swarm_interactions_example():
 
     ### Step 2: Create evaluator ###
     evaluator = InteractionsEvaluator(
-        rubric="The interaction sequence should represent a logical and optimal handoff of tasks" \
+        rubric="The interaction sequence should represent a logical and optimal handoff of tasks"
         " from one agent to another."
     )
 

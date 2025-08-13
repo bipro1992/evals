@@ -146,8 +146,10 @@ class InteractionsEvaluator(Evaluator[InputT, OutputT]):
         Returns:
             The results of the evaluation as EvaluationOutput.
         """
-        if not evaluation_case.actual_interactions:
-            raise Exception("Please make sure the task function returns a dictionary with the key 'interactions'.")
+        if evaluation_case.actual_interactions is None:
+            raise Exception(
+                "Please make sure the task function returns a dictionary with the key 'interactions' of type Interaction."
+            )
         num_interactions = len(evaluation_case.actual_interactions)
 
         # keep all of the context
@@ -168,7 +170,7 @@ class InteractionsEvaluator(Evaluator[InputT, OutputT]):
 
             ## Evaluate ##
             result = evaluator_agent.structured_output(EvaluationOutput, evaluation_prompt)
-            
+
         return result
 
     async def evaluate_async(self, evaluation_case: EvaluationData[InputT, OutputT]) -> EvaluationOutput:
